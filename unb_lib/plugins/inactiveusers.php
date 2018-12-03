@@ -62,8 +62,7 @@ function UnbHookInactiveUsersCPCategoryPage(&$data)
 
 		// Create my own database object so that some function calls won't take away my result
 		// and thus 'steal' all users after the 1st one!
-		if (PHP5) eval('$mydb = clone $UNB["Db"];');
-		else      $mydb = $UNB['Db'];
+		$mydb = clone $UNB["Db"];
 
 		// Find users without posts
 		$posts = $mydb->FastQuery1stArray(

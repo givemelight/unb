@@ -167,16 +167,10 @@ function UnbHookLogViewerCPCategoryPage(&$data)
 		$langs = array();
 		$sesss = array();
 
-		$php430 = phpversion() >= '4.3.0';
 		$fp = @fopen($UNB['LogPath'] . "board-$date.log", 'r');
 		if ($fp) while (!feof($fp))
 		{
-			if ($php430)
-				$fields = fgetcsv($fp, 1024, ' ', '"');
-			else
-			{
-				$fields = explode_quoted(' ', trim(fgets($fp, 1024)));
-			}
+			$fields = fgetcsv($fp, 1024, ' ', '"');
 			list($entry['date'],
 				$entry['time'],
 				$entry['userid'],

@@ -115,14 +115,7 @@ function Open()
 		die('<b>UNB Error:</b> MySQL PHP extension is not available. Check the <a href="http://newsboard.unclassified.de/docs/install#req">requirements</a>.<br />');
 	}
 
-	if (!function_exists('version_compare') || version_compare(phpversion(), '4.2.0') < 0)
-	{
-		$this->conn = mysql_connect($this->server, $this->user, $this->password);   // port 3306
-	}
-	else
-	{
-		$this->conn = mysql_connect($this->server, $this->user, $this->password, true);
-	}
+	$this->conn = mysql_connect($this->server, $this->user, $this->password, true);
 	if ($this->conn == false)
 	{
 		UnbErrorLog('Cannot connect to database: ' . mysql_error());

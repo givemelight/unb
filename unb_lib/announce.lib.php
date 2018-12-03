@@ -49,8 +49,7 @@ function __construct($id = 0)
 {
 	global $UNB;
 
-	if (PHP5) eval('$this->db = clone $UNB["Db"];');
-	else      $this->db = $UNB['Db'];
+	$this->db = clone $UNB["Db"];
 
 	if ($id !== 0) $this->Load($id);
 }
@@ -85,8 +84,7 @@ function Find($id, $newonly = false, $inthread = false)
 	// Clean parameters
 	$id = intval($id);
 
-	if (PHP5) eval('$this->finddb = clone $this->db;');
-	else      $this->finddb = $this->db;
+	$this->finddb = clone $this->db;
 
 	$id = intval($id);
 	if ($id == -1)

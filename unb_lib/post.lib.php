@@ -52,8 +52,7 @@ function __construct($id = 0)
 {
 	global $UNB;
 
-	if (PHP5) eval('$this->db = clone $UNB["Db"];');
-	else      $this->db = $UNB['Db'];
+	$this->db = clone $UNB["Db"];
 
 	if ((is_int($id) || is_numeric($id)) && $id > 0) $this->Load($id);
 	if (is_array($id)) $this->LoadFromRecord($id);
@@ -95,8 +94,7 @@ function Reset()
 //
 function Find($where = '', $order = '', $limit = '', $group = '')
 {
-	if (PHP5) eval('$this->finddb = clone $this->db;');
-	else      $this->finddb = $this->db;
+	$this->finddb = clone $this->db;
 
 	$record = $this->finddb->FastQuery('Posts', '*', $where, $order, $limit, $group);
 	return $this->LoadFromRecord($record);

@@ -56,17 +56,10 @@ if ($UNB['RelativeRoot'])
 if (!defined('ERR_REPORT_SET')) error_reporting(E_ALL & ~E_NOTICE);
 if (!defined('DISPLAY_ERR_SET')) @ini_set('display_errors', 0);
 
-// PHP5 support
-if (intval(phpversion()) >= 5)
+// Do not run on older versions than PHP 5
+if (intval(phpversion()) < 5)
 {
-	// The constant PHP5 is true if we're running in a PHP 5 environment.
-	define('PHP5', 1);
-	@ini_set('zend.ze1_compatibility_mode', 0);
-}
-else
-{
-	// [nodoc]
-	define('PHP5', 0);
+	die('<b>UNB Error:</b> PHP 5 or later required. Check the <a href="http://newsboard.unclassified.de/docs/install#req">requirements</a>.<br />');
 }
 
 // -------------------- Global data initialisation --------------------
@@ -174,69 +167,6 @@ define('UNB_NOTIFY_MASK', 127);   // Bitmask of notification all methods
 
 define('UNB_NOTIFY_BOOKMARK', 128);   // Bookmark the thread (stored with the notification flags)
 
-if (!function_exists('array_fill'))
-{
-	// Implementation of array_fill function if PHP doesn't provide it
-	//
-	// This function is pre-defined from PHP 4.2.0 on
-	// See the PHP manual for details.
-	//
-	function array_fill($start, $num, $value)
-	{
-		// Clean parameters
-		$num = intval($num);
-
-		$out = array();
-		for ($n = 0; $n < $num; $n++)
-		{
-			$out[$n + $start] = $value;
-		}
-		return $out;
-	}
-}
-
-if (!function_exists('html_entity_decode'))
-{
-	// Implementation of html_entity_decode function if PHP doesn't provide it
-	//
-	// This function is pre-defined from PHP 4.3.0 on
-	// See the PHP manual for details.
-	//
-	function html_entity_decode($str)
-	{
-		// Clean parameters
-		$str = strval($str);
-
-		$str = str_replace('&quot;', '"', $str);
-		$str = str_replace('&lt;', '<', $str);
-		$str = str_replace('&gt;', '>', $str);
-		$str = str_replace('&amp;', '&', $str);
-		return $str;
-	}
-}
-
-if (!defined('PHP_EOL'))
-{
-	// Available since PHP 4.3.10 and PHP 5.0.2
-	//
-	if (substr(strtoupper(PHP_OS), 0, 3) == 'WIN')
-		define('PHP_EOL', "\r\n");
-	else
-		define('PHP_EOL', "\n");
-}
-
-if (!function_exists('stripos'))
-{
-	// Implementation of stripos function if PHP doesn't provide it
-	//
-	// This function is pre-defined from PHP 5.0 on
-	// See the PHP manual for details.
-	//
-	function stripos($haystack, $needle, $offset = 0)
-	{
-		return strpos(strtolower($haystack), strtolower($needle), $offset);
-	}
-}
 
 // ---------- BEGIN Read configuration settings ----------
 $UNB['ProfileExtraNames'] = rc('extra_names', true);
@@ -1487,22 +1417,7 @@ function utf8_strlen($str)
 	// Clean parameters
 	$str = strval($str);
 
-	// PHP 5 optimisation
-	if (PHP5 && function_exists('iconv_strlen'))
-		return iconv_strlen($str, 'UTF-8');
-
-	$count = 0;
-	$len = strlen($str);
-	for ($i = 0; $i < $len; $i++)
-	{
-		$value = ord($str[$i]);
-		if ($value > 127)
-			if     ($value >= 224 && $value <= 239) $i += 2;
-			elseif ($value >= 240 && $value <= 247) $i += 3;
-			else   $i++;  /* 192...223 */
-		$count++;
-	}
-	return $count;
+	return iconv_strlen($str, 'UTF-8');
 }
 
 // UTF-8-aware string extraction method
@@ -1512,9 +1427,7 @@ function utf8_substr($str, $mbstart, $mblen = null)
 	// Clean parameters
 	$str = strval($str);
 
-	// PHP 5 optimisation
-#	if (PHP5 && function_exists('iconv_substr'))
-#		return iconv_substr($str, $mbstart, $mblen, 'UTF-8');
+#	return iconv_substr($str, $mbstart, $mblen, 'UTF-8');
 	// TODO,FIXME: iconv_substr returns false when it isn't supposed to. can't use that function
 
 	$pos = 0;         // current ascii string index

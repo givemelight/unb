@@ -100,8 +100,7 @@ function __construct($id = 0)
 {
 	global $UNB;
 
-	if (PHP5) eval('$this->db = clone $UNB["Db"];');
-	else      $this->db = $UNB['Db'];
+	$this->db = clone $UNB["Db"];
 
 	if ($UNB['ProfileExtraCount'] > 0)
 		$this->Extra = array_fill(1, $UNB['ProfileExtraCount'], '');
@@ -172,8 +171,7 @@ function Reset()
 //
 function GetList($where = '', $order = '', $limit = '')
 {
-	if (PHP5) eval('$this->finddb = clone $this->db;');
-	else      $this->finddb = $this->db;
+	$this->finddb = clone $this->db;
 
 	$record = $this->finddb->FastQuery('Users', '*', $where, $order, $limit);
 	return $this->LoadFromRecord($record);

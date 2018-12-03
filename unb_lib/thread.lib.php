@@ -54,8 +54,7 @@ function __construct($id = 0)
 {
 	global $UNB;
 
-	if (PHP5) eval('$this->db = clone $UNB["Db"];');
-	else      $this->db = $UNB['Db'];
+	$this->db = clone $UNB["Db"];
 
 	if ((is_int($id) || is_numeric($id)) && $id > 0) $this->Load($id);
 	if (is_array($id)) $this->LoadFromRecord($id);
@@ -95,8 +94,7 @@ function Reset()
 //
 function Find($where = 0, $order = '', $limit = '')
 {
-	if (PHP5) eval('$this->finddb = clone $this->db;');
-	else      $this->finddb = $this->db;
+	$this->finddb = clone $this->db;
 
 	if (is_int($where))
 	{
@@ -790,8 +788,7 @@ function GetUsersVoted($id = 0)
 	$id = intval($id);
 	if (!$id) $id = $this->ID;
 
-	if (PHP5) eval('$db = clone $this->db;');
-	else      $db = $this->db;
+	$db = clone $this->db;
 
 	return $db->FastQueryArray(
 		/*table*/ array(

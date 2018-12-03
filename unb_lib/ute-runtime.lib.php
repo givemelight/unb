@@ -301,8 +301,7 @@ function UteStrlen($str)
 
 	if ($UTE['__characterSet'] === 'UTF-8')
 	{
-		// PHP 5 optimisation
-		if (PHP_VERSION >= 5 && function_exists('iconv_strlen'))
+		if (function_exists('iconv_strlen'))
 			return iconv_strlen($str, 'UTF-8');
 
 		$count = 0;
@@ -333,8 +332,7 @@ function UteSubstr($str, $start, $len = false)
 
 	if ($UTE['__characterSet'] === 'UTF-8')
 	{
-		// PHP 5 optimisation
-		if (PHP_VERSION >= 5 && function_exists('iconv_substr'))
+		if (function_exists('iconv_substr'))
 			return iconv_substr($str, $start, ($len === false ? NULL : $len), 'UTF-8');
 
 		if ($start < 0) $start += UteStrlen($str);
