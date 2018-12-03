@@ -29,7 +29,7 @@ class Jabber
     var $server = '';
     var $features = array();
 
-    function Jabber($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
+    function __construct($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
     {
         // Can we use Jabber at all?
         // Note: Maybe replace with SimpleXML in the future
