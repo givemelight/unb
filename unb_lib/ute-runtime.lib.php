@@ -271,7 +271,7 @@ function UteVariable($name, $key1 = false, $key2 = false)
 	global $UTE;
 
 	// are we inside a foreach loop?
-	if (sizeof($UTE['__loops_rt']) > 0 && $UTE['__loops_rt'][sizeof($UTE['__loops_rt']) - 1] == '')
+	if ($UTE['__loops_rt'] !== null && sizeof($UTE['__loops_rt']) > 0 && $UTE['__loops_rt'][sizeof($UTE['__loops_rt']) - 1] == '')
 	{
 		if ($name === '')
 		{
