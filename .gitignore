@@ -1,4 +1,5 @@
 board.conf.php
+lock.conf
 unb_lib/logs
 !unb_lib/logs/.htaccess
 unb_lib/designs/modern/tpl/cache
