@@ -2943,7 +2943,7 @@ function CPForm($userid, $cat = 1)
 		$TP['controlpanelAutoBanFloodIpPeriod'] = $p ? t2i($_POST['AutoBanFloodIpPeriod']) : t2i(rc('auto_ban_flood_ip_period'));   // number [s]
 		$TP['controlpanelAutoBanFloodIpThreshold'] = $p ? t2i($_POST['AutoBanFloodIpThreshold']) : t2i(rc('auto_ban_flood_ip_threshold'));   // number
 		$TP['controlpanelAdminLock'] = $p ? t2i($_POST['AdminLock']) : t2i(rc('admin_lock'));
-		$announce =& new IAnnounce;
+		$announce = new IAnnounce;
 		if ($announce->Find(-1))
 			$MaintenanceMsg = $announce->GetMsg();
 		else
