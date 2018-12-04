@@ -2380,8 +2380,6 @@ function UnbEndHTML()
 
 	// database is left open so that frame page can access it
 	if (!$simple) eval($UNB['FrameEndPage']);
-
-	$UNB['Db']->Close();
 }
 
 // Output additional CSS resources that other templates have requested.
