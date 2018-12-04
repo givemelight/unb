@@ -592,12 +592,20 @@ function UteParseExpressionRec(&$parts, &$pos)
 	// string_data
 	if (preg_match('/^"(.*)"$/', $p, $m))
 	{
-		return '"' .
-			preg_replace(
-				array('_\\n_', '_\\r_', '_\\t_', '_\\\\_', '_"_', '_\\\\x([0-9a-f]{2})_ie',   '_\\\\u([0-9a-f]{4})_ie'),
-				array("\n",    "\r",    "\t",    '\\',     '\\"', 'UteCodeUTF(hexdec("$1"))', 'UteCodeUTF(hexdec("$1"))'),
-				$m[1]) .
-			'"';
+		$str = str_replace(
+			array('_\\n_', '_\\r_', '_\\t_', '_\\\\_', '_"_'),
+			array("\n",    "\r",    "\t",    '\\',     '\\"'),
+			$m[1]
+		);
+		$str = preg_replace_callback(
+			array('_\\\\x([0-9a-f]{2})_i',   '_\\\\u([0-9a-f]{4})_i'),
+			function ($matches)
+			{
+				return UteCodeUTF(hexdec($matches[1]));
+			},
+			$str
+		);
+		return '"' . $str . '"';
 	}
 
 	// variable
