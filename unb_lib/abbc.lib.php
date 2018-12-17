@@ -11,24 +11,6 @@
 
 if (!defined('UNB_RUNNING')) die('Not a UNB environment in ' . basename(__FILE__));
 
-define('ABBC_ALL', -1);           // All tag groups
-define('ABBC_NONE', 0);           // No tag groups
-define('ABBC_MINIMUM', 1);        // Minimal transformation of line-breaks and HTML control characters
-define('ABBC_SIMPLE', 2);         // Simple text formatting like bold, italic etc.
-define('ABBC_CODE', 4);           // [code] block
-define('ABBC_QUOTE', 8);          // [quote] block
-define('ABBC_FONT', 16);          // Font style tags, font family, size etc.
-define('ABBC_URL', 32);           // Link tags
-define('ABBC_IMG', 64);           // Image tags
-define('ABBC_LIST', 128);         // Lists
-define('ABBC_SPECIAL', 256);      // Special syntax like *bold* etc.
-define('ABBC_DONTINT', 512);      // "Don't interpret" tags
-define('ABBC_PARAGRAPH', 1024);   // Paragraph transformation (don't use this)
-define('ABBC_CUSTOM', 2048);      // Custom extensions
-define('ABBC_SMILIES', 4096);     // Convert smilies to graphics
-define('ABBC_HTML', 8192);        // [html] tag
-define('ABBC_TABLE', 16384);      // Table tags
-
 // internal version number, do not change this
 $ABBC['Version'] = '1.2-20051221(unb)';
 
