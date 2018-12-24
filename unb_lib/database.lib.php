@@ -181,7 +181,7 @@ function LastError()
 //
 // returns (bool) success
 //
-function Exec($sql)
+function Exec($sql, Array $params = null)
 {
 	global $gDBcount, $gDBtime, $UNB;
 
@@ -212,7 +212,15 @@ function Exec($sql)
 			break;
 
 		default:
-			$this->result = $this->conn->exec($sql);
+			$stmt = $this->conn->prepare($sql);
+			if ($stmt)
+			{
+				$this->result = $stmt->execute($params);
+			}
+			else
+			{
+				$this->result = false;
+			}
 			break;
 	}
 
@@ -673,24 +681,21 @@ function AddRecord($fields, $table = '')
 	// build SQL query
 	$table = $this->tblprefix . $table;
 	$q = 'INSERT INTO `' . $table . '` SET ';
+	$p = array();
 
 	if (is_array($fields))
 	{
-		$pos = 0;
+		$n = 0;
 		reset($fields);
 		while (list ($key, $value) = each ($fields))
 		{
-			#$num = is_numeric($value);
-			$num = false;   // let the DBMS decide whether it is numeric or not...
+			if ($n >= 1) $q .= ', ';
 
-			if ($pos >= 1) $q .= ', ';
+			$name = ':p' . $n;
+			$q .= '`' . $key . '`=' . $name;
+			$p[$name] = $value;
 
-			$q .= '`' . $key . '`=';
-			$q .= ($num ? '' : '"');
-			$q .= UnbDbEncode($value);
-			$q .= ($num ? '' : '"');
-
-			$pos++;
+			$n++;
 		}
 	}
 	elseif (is_string($fields))
@@ -700,7 +705,7 @@ function AddRecord($fields, $table = '')
 	else
 		return false;   // input type not supported
 
-	return $this->Exec($q);
+	return $this->Exec($q, $p);
 }
 
 // Change a record
@@ -718,27 +723,36 @@ function ChangeRecord($fields, $where = '', $table = '')
 	// build SQL query
 	$table = $this->tblprefix . $table;
 	$q = 'UPDATE `' . $table . '` SET ';
+	$p = array();
 
 	if (is_array($fields))
 	{
 		$n = 0;
 		foreach ($fields as $key => $value)
 		{
+			if ($n >= 1) $q .= ', ';
+
 			if (is_array($value))
 			{
 				if ($value[0])   // need quoting
 				{
-					$q .= ($n++ ? ', ' : '') . '`' . $key . '`="' . UnbDbEncode($value[1]) . '"';
+					$name = ':p' . $n;
+					$q .= '`' . $key . '`=' . $name;
+					$p[$name] = $value[1];
 				}
 				else   // don't quote (advanced expression)
 				{
-					$q .= ($n++ ? ', ' : '') . '`' . $key . '`=' . $value[1];
+					$q .= '`' . $key . '`=' . $value[1];
 				}
 			}
 			else
 			{
-				$q .= ($n++ ? ', ' : '') . '`' . $key . '`="' . UnbDbEncode($value) . '"';
+				$name = ':p' . $n;
+				$q .= '`' . $key . '`=' . $name;
+				$p[$name] = $value;
 			}
+
+			$n++;
 		}
 	}
 	elseif (is_string($fields))
@@ -750,7 +764,7 @@ function ChangeRecord($fields, $where = '', $table = '')
 
 	if ($where != '') $q .= ' WHERE ' . $where;
 
-	return $this->Exec($q);
+	return $this->Exec($q, $p);
 }
 
 // Delete a record
