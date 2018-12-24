@@ -2020,7 +2020,7 @@ function UnbAddLog($action, $email = false)
 			'Session' => $sid
 			), 'Log');*/
 
-		$action = date('Y-m-d H:i:s', $now) . " $UNB[LoginUserID] \"$name\" " . $_SERVER['REMOTE_ADDR'] . " \"$action\" {$UNB[Client][browser]} $bver {$UNB[Client][os]} {$UNB[Client][lang]} $sid" . PHP_EOL;
+		$action = date('Y-m-d H:i:s', $now) . " $UNB[LoginUserID] \"$name\" " . $_SERVER['REMOTE_ADDR'] . " \"$action\" {$UNB['Client']['browser']} $bver {$UNB['Client']['os']} {$UNB['Client']['lang']} $sid" . PHP_EOL;
 
 		$cnt = 5;
 		do
@@ -2107,7 +2107,7 @@ function UnbErrorLog($error)
 		}
 	}
 
-	$page = $UNB[ThisPage];
+	$page = $UNB['ThisPage'];
 	if (!$page)
 	{
 		$page = $_SERVER['PHP_SELF'];

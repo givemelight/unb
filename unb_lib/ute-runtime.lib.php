@@ -287,7 +287,7 @@ function UteVariable($name, $key1 = false, $key2 = false)
 
 	// only allow secondary array use if this is really an array
 	if ($key2 !== false && is_array($UTE[$name])) return $UTE[$name][$key1][$key2];
-	if ($key1 !== false) return $UTE[$name][$key1];
+	if ($key1 !== false && is_array($UTE[$name])) return $UTE[$name][$key1];
 	return $UTE[$name];
 }
 

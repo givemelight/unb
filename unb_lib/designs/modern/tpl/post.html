@@ -150,7 +150,7 @@ setImageId('post_{$post.num}_moreimg', toggleVisId('post_{$post.num}_more', 0) =
 </div><!-- post_signature -->
 {endif}
 
-{if sizeof $post.attachlist}
+{if $post.attachlist}
 <div class="post_attach">
 	<div class="post_attach_head">
 		{trnum "post.attach~" (sizeof $post.attachlist) "n" (sizeof $post.attachlist)}:
