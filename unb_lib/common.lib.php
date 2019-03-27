@@ -1403,8 +1403,8 @@ function h2t($text)
 function nojs($str)
 {
 	$a = $str;
-	$a = preg_replace('/(?:&#0*([0-9]+);)/e', 'chr($1)', $a);
-	$a = preg_replace('/(?:&#x([0-9A-Fa-f]+);)/e', 'chr(hexdec(\'$1\'))', $a);
+	$a = preg_replace_callback('/(?:&#0*([0-9]+);)/', function($m) { return chr($m[1]); }, $a);
+	$a = preg_replace_callback('/(?:&#x([0-9A-Fa-f]+);)/', function($m) { return chr(hexdec($m[1])); }, $a);
 	$a = preg_replace('/[\x00-\x20]/', '', $a);
 	if (preg_match('/^javascript:/i', $a)) return '';
 	return $str;
