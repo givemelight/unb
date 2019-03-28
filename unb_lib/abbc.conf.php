@@ -124,14 +124,8 @@ $ABBC['Tags'] = array(
 // TODO: add optional second parameter (numeric, to distinguish them...) to define a starting line number
 'code' => array(
 'html0'		 => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[1]))) . '</div>'; },
-// 'htmlopen0'  => "~'<div class=\"code\">'.",
-// 'htmlcont0'  => "AbbcSyntaxHighlight(abbcs(rtrim('$1'))).",
-// 'htmlclose0' => "'</div>'",
 'textcont0'  => '$1',
 'html1'      => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[2])), $m[1]) . '</div>'; },
-// 'htmlopen1'  => "~'<div class=\"code\">'.",
-// 'htmlcont1'  => "AbbcSyntaxHighlight(abbcs(rtrim('$2')),'$1').",
-// 'htmlclose1' => "'</div>'",
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 0,
@@ -146,9 +140,6 @@ $ABBC['Tags'] = array(
 
 'quote' => array(
 'html0'      => function ($m) { return '<blockquote class="quote"><div class="quote_inner">' . ltrimln(abbcs($m[1])) . '</div></blockquote>'; },
-// 'htmlopen0'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\">'.",
-// 'htmlcont0'  => "ltrimln(abbcs('$1')).",
-// 'htmlclose0' => "'</div></blockquote>'",
 
 'textcont0'  => "--- \".\$GLOBALS['UNB_T']['quote'].\":\n\$1\n---",
 
@@ -156,11 +147,6 @@ $ABBC['Tags'] = array(
 	(trim($m[1]) ? $GLOBALS['UNB_T']['quote by'] . ' ' . t2h(trim(abbcs($m[1]))) : $GLOBALS['UNB_T']['quote']) .
 	':</div>' . ltrimln(abbcs($m[2])) . '</div></blockquote>';
 },
-// 'htmlopen1'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
-// 	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))) : \$GLOBALS['UNB_T']['quote']).
-// 	':</div>'.",
-// 'htmlcont1'  => "ltrimln(abbcs('$2')).",
-// 'htmlclose1' => "'</div></blockquote>'",
 
 #'textcont1'  => "--- \".(trim(\"\$1\")==''?'':\" \".\$GLOBALS['UNB_T']['by'].\" \$1\").\":\n\$2\n---",
 'textcont1'  => '',   // TODO: unused, disabled
@@ -170,10 +156,6 @@ $ABBC['Tags'] = array(
 	ltrimln(abbcs($m[2])) .
 	'</div></blockquote>';
 },
-// 'htmlopen2'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
-// 	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))).' '.\$GLOBALS['UNB_T']['on'].' '.UnbFormatTime(intval('$2'),3) : \$GLOBALS['UNB_T']['quote']).':</div>'.",
-// 'htmlcont2'  => "ltrimln(abbcs('$3')).",
-// 'htmlclose2' => "'</div></blockquote>'",
 
 #'textcont2'  => "--- \".\$GLOBALS['UNB_T']['quote'].(trim(\"\$1\")==''?'':\" \".\$GLOBALS['UNB_T']['by'].\" \$1 \".\$GLOBALS['UNB_T']['on'].\" \".UnbFormatTime(\$2,3)).\":\n\$3\n---",
 'textcont2'  => '',   // TODO: unused, disabled
@@ -259,9 +241,6 @@ $ABBC['Tags'] = array(
 'htmlclose0' => '</span>',
 'textcont0'  => '$1',
 'html1'      => function ($m) { return '<span style="border-top:1px solid ' . abbcq($m[1]) . ';margin-top:1px;">' . abbcs($m[2]) . '</span>'; },
-// 'htmlopen1'  => "~'<span style=\"border-top:1px solid '.abbcq('$1').';margin-top:1px;\">'.",
-// 'htmlcont1'  => "abbcs('$2').",
-// 'htmlclose1' => "'</span>'",
 'textcont1'  => '$1',
 'htmlblock'  => false,
 'minparam'   => 0,
