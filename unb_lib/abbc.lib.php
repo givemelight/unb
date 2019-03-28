@@ -1127,14 +1127,15 @@ function AbbcRegReplaceTag($text, $tagname, $totext = false)
 		// check for PHP code
 		if (!$totext)
 		{
-			$htmlopen = $thistag['htmlopen' . $n];
-			if ($htmlopen !== '' && $htmlopen{0} === '~')
+			if (isset($thistag['html' . $n]))
 			{
-				$mod .= 'e';
-				$htmlopen = substr($htmlopen, 1);
+				$html = $thistag['html' . $n];
 			}
-
-			$html = $htmlopen . ($openclose ? $thistag['htmlcont' . $n] . $thistag['htmlclose' . $n] : '');
+			else
+			{
+				$htmlopen = $thistag['htmlopen' . $n];	
+				$html = $htmlopen . ($openclose ? $thistag['htmlcont' . $n] . $thistag['htmlclose' . $n] : '');
+			}
 		}
 		else  // totext
 		{
@@ -1143,8 +1144,8 @@ function AbbcRegReplaceTag($text, $tagname, $totext = false)
 		}
 
 		$reg = "/^(\s*?)$regopen[$n]$between$regclose(\s*?)$/$mod";
-
-		if ($html !== '')
+		
+		if (!is_callable($html) && $html !== '')
 		{
 			// since we add a capturing parenthesis, we have to change all back-reference numbers
 			// BUT only, if $html wasn't empty anyway, like for the [rem] tag
@@ -1164,11 +1165,6 @@ function AbbcRegReplaceTag($text, $tagname, $totext = false)
 				// no PHP code, just add the $'s
 				$html = '$1' . $html . '$' . $maxref;
 			}
-			else
-			{
-				// PHP code: put them in quotes
-				$html = '\'$1\'.' . $html . '.\'$' . $maxref . '\'';
-			}
 
 			$html .= $thistag['htmlblock'] ? "\r" : '';
 		}
@@ -1176,7 +1172,7 @@ function AbbcRegReplaceTag($text, $tagname, $totext = false)
 		// now it's time to actually perform the translation!
 		#echo "<p><pre>" . t2h($reg) . "</pre></p>";   // debug
 		#echo "<p><pre>" . t2h($html) . "</pre></p>";   // debug
-
+		
 		// does the text match this regexp? if not, we have a different parameters count.
 		if (preg_match($reg, $text, $m))
 		{
@@ -1187,19 +1183,22 @@ function AbbcRegReplaceTag($text, $tagname, $totext = false)
 			{
 				// tag content is empty, omit the entire tag.
 				// we do this by building a new to-replace-by variable that only contains the surrounding spaces
-				if (strpos($mod, 'e') === false)
-				{
-					// no PHP code, just add the $'s
-					$html = '$1' . '$' . $maxref;
-				}
-				else
-				{
-					// PHP code: put them in quotes
-					$html = '\'$1$' . $maxref . '\'';
-				}
+				$html = '$1' . '$' . $maxref;
 			}
 
-			$text = preg_replace($reg, $html, $text);
+			if (is_callable($html))
+			{
+				$text = preg_replace_callback($reg, function($m) use ($html) {
+					// Put first group always before
+					$before = array_splice($m, 1, 1);
+					$after = array_splice($m, -1, 1);
+					return $before[0] . $html($m) . $after[0];
+				}, $text);
+			}
+			else
+			{
+				$text = preg_replace($reg, $html, $text);
+			}
 		}
 	}
 

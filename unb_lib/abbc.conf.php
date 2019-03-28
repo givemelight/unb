@@ -123,13 +123,15 @@ $ABBC['Tags'] = array(
 
 // TODO: add optional second parameter (numeric, to distinguish them...) to define a starting line number
 'code' => array(
-'htmlopen0'  => "~'<div class=\"code\">'.",
-'htmlcont0'  => "AbbcSyntaxHighlight(abbcs(rtrim('$1'))).",
-'htmlclose0' => "'</div>'",
+'html0'		 => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[1]))) . '</div>'; },
+// 'htmlopen0'  => "~'<div class=\"code\">'.",
+// 'htmlcont0'  => "AbbcSyntaxHighlight(abbcs(rtrim('$1'))).",
+// 'htmlclose0' => "'</div>'",
 'textcont0'  => '$1',
-'htmlopen1'  => "~'<div class=\"code\">'.",
-'htmlcont1'  => "AbbcSyntaxHighlight(abbcs(rtrim('$2')),'$1').",
-'htmlclose1' => "'</div>'",
+'html1'      => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[2])), $m[1]) . '</div>'; },
+// 'htmlopen1'  => "~'<div class=\"code\">'.",
+// 'htmlcont1'  => "AbbcSyntaxHighlight(abbcs(rtrim('$2')),'$1').",
+// 'htmlclose1' => "'</div>'",
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 0,
@@ -143,25 +145,35 @@ $ABBC['Tags'] = array(
 ),
 
 'quote' => array(
-'htmlopen0'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\">'.",
-'htmlcont0'  => "ltrimln(abbcs('$1')).",
-'htmlclose0' => "'</div></blockquote>'",
+'html0'      => function ($m) { return '<blockquote class="quote"><div class="quote_inner">' . ltrimln(abbcs($m[1])) . '</div></blockquote>'; },
+// 'htmlopen0'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\">'.",
+// 'htmlcont0'  => "ltrimln(abbcs('$1')).",
+// 'htmlclose0' => "'</div></blockquote>'",
 
 'textcont0'  => "--- \".\$GLOBALS['UNB_T']['quote'].\":\n\$1\n---",
 
-'htmlopen1'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
-	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))) : \$GLOBALS['UNB_T']['quote']).
-	':</div>'.",
-'htmlcont1'  => "ltrimln(abbcs('$2')).",
-'htmlclose1' => "'</div></blockquote>'",
+'html1'      => function ($m) { return '<blockquote class="quote"><div class="quote_inner"><div class="qname">' .
+	(trim($m[1]) ? $GLOBALS['UNB_T']['quote by'] . ' ' . t2h(trim(abbcs($m[1]))) : $GLOBALS['UNB_T']['quote']) .
+	':</div>' . ltrimln(abbcs($m[2])) . '</div></blockquote>';
+},
+// 'htmlopen1'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
+// 	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))) : \$GLOBALS['UNB_T']['quote']).
+// 	':</div>'.",
+// 'htmlcont1'  => "ltrimln(abbcs('$2')).",
+// 'htmlclose1' => "'</div></blockquote>'",
 
 #'textcont1'  => "--- \".(trim(\"\$1\")==''?'':\" \".\$GLOBALS['UNB_T']['by'].\" \$1\").\":\n\$2\n---",
 'textcont1'  => '',   // TODO: unused, disabled
 
-'htmlopen2'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
-	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))).' '.\$GLOBALS['UNB_T']['on'].' '.UnbFormatTime(intval('$2'),3) : \$GLOBALS['UNB_T']['quote']).':</div>'.",
-'htmlcont2'  => "ltrimln(abbcs('$3')).",
-'htmlclose2' => "'</div></blockquote>'",
+'html2'      => function ($m) { return '<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
+	(trim($m[1]) ? $GLOBALS['UNB_T']['quote by'] . ' ' . t2h(trim(abbcs($m[1]))) . ' ' . $GLOBALS['UNB_T']['on'] . ' ' . UnbFormatTime(intval($m[2]),3) : $GLOBALS['UNB_T']['quote']).':</div>' .
+	ltrimln(abbcs($m[2])) .
+	'</div></blockquote>';
+},
+// 'htmlopen2'  => "~'<blockquote class=\"quote\"><div class=\"quote_inner\"><div class=\"qname\">'.
+// 	(trim('$1') ? \$GLOBALS['UNB_T']['quote by'].' '.t2h(trim(abbcs('$1'))).' '.\$GLOBALS['UNB_T']['on'].' '.UnbFormatTime(intval('$2'),3) : \$GLOBALS['UNB_T']['quote']).':</div>'.",
+// 'htmlcont2'  => "ltrimln(abbcs('$3')).",
+// 'htmlclose2' => "'</div></blockquote>'",
 
 #'textcont2'  => "--- \".\$GLOBALS['UNB_T']['quote'].(trim(\"\$1\")==''?'':\" \".\$GLOBALS['UNB_T']['by'].\" \$1 \".\$GLOBALS['UNB_T']['on'].\" \".UnbFormatTime(\$2,3)).\":\n\$3\n---",
 'textcont2'  => '',   // TODO: unused, disabled
@@ -246,9 +258,10 @@ $ABBC['Tags'] = array(
 'htmlcont0'  => '$1',
 'htmlclose0' => '</span>',
 'textcont0'  => '$1',
-'htmlopen1'  => "~'<span style=\"border-top:1px solid '.abbcq('$1').';margin-top:1px;\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</span>'",
+'html1'      => function ($m) { return '<span style="border-top:1px solid ' . abbcq($m[1]) . ';margin-top:1px;">' . abbcs($m[2]) . '</span>'; },
+// 'htmlopen1'  => "~'<span style=\"border-top:1px solid '.abbcq('$1').';margin-top:1px;\">'.",
+// 'htmlcont1'  => "abbcs('$2').",
+// 'htmlclose1' => "'</span>'",
 'textcont1'  => '$1',
 'htmlblock'  => false,
 'minparam'   => 0,
@@ -278,15 +291,11 @@ $ABBC['Tags'] = array(
 ),
 
 'url' => array(
-'htmlopen0'  => "~'<a href=\"'.UnbLink(h2t(strip_tags(abbcs('$1'))), null, true, false, true, true, true, false).'\" title=\"'.t2i(h2t(strip_tags(abbcs('$1')))).'\">'.",
-'htmlcont0'  => "UnbLimitUrl(abbcs('$1'),60).",
-'htmlclose0' => "'</a>'",
+'html0'      => function ($m) { return '<a href="' . UnbLink(h2t(strip_tags(abbcs($m[1]))), null, true, false, true, true, true, false) . '" title="' . t2i(h2t(strip_tags(abbcs($m[1])))) . '">' . UnbLimitUrl(abbcs($m[1]),60) . '</a>'; },
 
 'textcont0'  => '$1',
 
-'htmlopen1'  => "~'<a href=\"'.UnbLink(h2t(abbcs('$1')), null, true, false, true, true, true, false).'\" title=\"'.t2i(abbcs('$1')).'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</a>'",
+'html1'		 => function ($m) { return '<a href="' . UnbLink(h2t(abbcs($m[1])), null, true, false, true, true, true, false) . '" title="' . t2i(abbcs($m[1])) . '">' . abbcs($m[2]) . '</a>'; },
 
 'textcont1'  => '$2 [$1]',
 
@@ -302,13 +311,9 @@ $ABBC['Tags'] = array(
 ),
 
 'mail' => array(
-'htmlopen0'  => "~'<a href=\"mailto:'.abbcq('$1').'\">'.",
-'htmlcont0'  => "abbcs('$1').",
-'htmlclose0' => "'</a>'",
+'html0'		 => function ($m) { return '<a href="mailto:' . abbcq($m[1]) . '">' . abbcs($m[1]) . '</a>'; },
 'textcont0'  => '$1',
-'htmlopen1'  => "~'<a href=\"mailto:'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</a>'",
+'html1'	     => function ($m) { return '<a href="mailto:' . abbcq($m[1]) . '">' . abbcs($m[2]) . '</a>'; },
 'textcont1'  => '$2 <$1>',
 'htmlblock'  => false,
 'minparam'   => 0,
@@ -322,13 +327,9 @@ $ABBC['Tags'] = array(
 ),
 
 'img' => array(
-'htmlopen0'  => '~',
-'htmlcont0'  => "'<img src=\"'.t2i(nojs(h2t(strip_tags(abbcs('$1'))))).'\" title=\"'.t2i(h2t(strip_tags(abbcs('$1')))).'\" alt=\"['.\$GLOBALS['UNB_T']['img_alt'].': '.t2i(h2t(strip_tags(abbcs('$1')))).']\" />'",
-'htmlclose0' => '',
+'html0'		 => function ($m) { return '<img src="' . t2i(nojs(h2t(strip_tags(abbcs($m[1]))))) . '" title="' . t2i(h2t(strip_tags(abbcs($m[1])))).'" alt="[' . $GLOBALS['UNB_T']['img_alt'] . ': ' . t2i(h2t(strip_tags(abbcs($m[1])))) . ']" />'; },
 'textcont0'  => "\"(\".\$GLOBALS['UNB_T']['image'].\": \$1)\"",
-'htmlopen1'  => '~',
-'htmlcont1'  => "'<img src=\"'.t2i(nojs(h2t(strip_tags(abbcs('$2'))))).'\" align=\"'.t2i(h2t(abbcs('$1'))).'\" title=\"'.t2i(h2t(strip_tags(abbcs('$2')))).'\" alt=\"['.\$GLOBALS['UNB_T']['img_alt'].': '.t2i(h2t(strip_tags(abbcs('$2')))).']\" />'",
-'htmlclose1' => '',
+'html1'      => function ($m) { return '<img src="' . t2i(nojs(h2t(strip_tags(abbcs($m[2]))))) . '" align="'.t2i(h2t(abbcs($m[1]))) . '" title="' . t2i(h2t(strip_tags(abbcs($m[2])))) . '" alt="[' . $GLOBALS['UNB_T']['img_alt'] . ': ' . t2i(h2t(strip_tags(abbcs($m[2])))) . ']" />'; },
 'textcont1'  => "\"(\".\$GLOBALS['UNB_T']['image'].\": \$2)\"",
 'htmlblock'  => false,
 'minparam'   => 0,
@@ -358,9 +359,7 @@ $ABBC['Tags'] = array(
 ),
 
 'color' => array(
-'htmlopen1'  => "~'<span style=\"color:'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</span>'",
+'html1'		 => function ($m) { return '<span style="color:' . abbcq($m[1]) . '">' . abbcs($m[2]) . '</span>'; },
 'textcont1'  => '$2',
 'htmlblock'  => false,
 'minparam'   => 1,
@@ -374,17 +373,11 @@ $ABBC['Tags'] = array(
 ),
 
 'font' => array(
-'htmlopen1'  => "~'<span style=\"font-family:'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</span>'",
+'html1'	     => function ($m) { return '<span style="font-family:' . abbcq($m[1]) . '">' . abbcs($m[2]) . '</span>'; },
 'textcont1'  => '$2',
-'htmlopen2'  => "~'<span style=\"font-family:'.abbcq('$1').'; font-size:'.(abbcq('$2')/10).'em; line-height:120%\">'.",
-'htmlcont2'  => "stripslashes('$3').",
-'htmlclose2' => "'</span>'",
+'html2'		 => function ($m) { return '<span style="font-family:' . abbcq($m[1]) . '; font-size:' . (abbcq($m[2])/10) . 'em; line-height:120%">' . stripslashes($m[3]) . '</span>'; },
 'textcont2'  => '$3',
-'htmlopen3'  => "~'<span style=\"font-family:'.abbcq('$1').'; font-size:'.(abbcq('$2')/10).'em; line-height:'.(abbcq('$3')/10).'em\">'.",
-'htmlcont3'  => "abbcs('$4').",
-'htmlclose3' => "'</span>'",
+'html3'      => function ($m) { return '<span style="font-family:'.abbcq($m[1]).'; font-size:' . (abbcq($m[2])/10) . 'em; line-height:' . (abbcq($m[3])/10) . 'em">' . abbcs($m[4]) . '</span>'; },
 'textcont3'  => '$4',
 'htmlblock'  => false,
 'minparam'   => 1,
@@ -398,13 +391,9 @@ $ABBC['Tags'] = array(
 ),
 
 'size' => array(
-'htmlopen1'  => "~'<span style=\"font-size:'.(abbcq('$1')/10).'em; line-height:120%\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</span>'",
+'html1'      => function ($m) { return '<span style="font-size:' . (abbcq($m[1])/10) . 'em; line-height:120%">' . abbcs($m[2]) . '</span>'; },
 'textcont1'  => '$2',
-'htmlopen2'  => "~'<span style=\"font-size:'.(abbcq('$1')/10).'em; line-height:'.(abbcq('$2')/10).'em\">'.",
-'htmlcont2'  => "abbcs('$3').",
-'htmlclose2' => "'</span>'",
+'html2'		 => function ($m) { return '<span style=\"font-size:' . (abbcq($m[1])/10) . 'em; line-height:' . (abbcq($m[2])/10) . 'em\">' . abbcs($m[3]). '</span>'; },
 'textcont2'  => '$3',
 'htmlblock'  => false,
 'minparam'   => 1,
@@ -450,9 +439,7 @@ $ABBC['Tags'] = array(
 ),
 
 'mark' => array(
-'htmlopen1'  => "~'<span style=\"background-color:'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</span>'",
+'html1'      => function ($m) { return '<span style="background-color:' . abbcq($m[1]) . '">' . abbcs($m[2]). '</span>'; },
 'textcont1'  => '$2',
 'htmlblock'  => false,
 'minparam'   => 1,
@@ -466,9 +453,7 @@ $ABBC['Tags'] = array(
 ),
 
 'align' => array(
-'htmlopen1'  => "~'<div style=\"text-align:'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</div>'",
+'html1'      => function ($m) { return '<div style="text-align:' . abbcq($m[1]) . '">' . abbcs($m[2]) . '</div>'; },
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 1,
@@ -486,13 +471,9 @@ $ABBC['Tags'] = array(
 'htmlcont0'  => '',
 'htmlclose0' => '',
 'textcont0'  => '----------',
-'htmlopen1'  => "~'<br /><div style=\"border-top:1px solid '.abbcq('$1').'; margin:4px 0;\"></div>'",
-'htmlcont1'  => '',
-'htmlclose1' => '',
+'html1'      => function ($m) { return '<br /><div style="border-top:1px solid ' . abbcq($m[1]) . '; margin:4px 0;\"></div>'; },
 'textcont1'  => '----------',
-'htmlopen2'  => "~'<br /><div style=\"border-top:'.abbcq('$2').'px solid '.abbcq('$1').'; margin:8px 0;\"></div>'",
-'htmlcont2'  => '',
-'htmlclose2' => '',
+'html2'      => function ($m) { return '<br /><div style="border-top:' . abbcq($m[2]) . 'px solid ' . abbcq($m[1]) . '; margin:8px 0;\"></div>'; },
 'textcont2'  => '----------',
 'htmlblock'  => true,
 'minparam'   => 0,
@@ -510,9 +491,7 @@ $ABBC['Tags'] = array(
 'htmlcont0'  => '$1',
 'htmlclose0' => '</div>',
 'textcont0'  => '$1',
-'htmlopen1'  => "~'<div style=\"margin-left:'.abbcq('$1').'px\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</div>'",
+'html1'      => function ($m) { return '<div style="margin-left:' . abbcq($m[1]) . 'px">' . abbcs($m[2]) . '</div>'; },
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 0,
@@ -578,9 +557,7 @@ $ABBC['Tags'] = array(
 'htmlcont0'  => '$1',
 'htmlclose0' => '</table>',
 'textcont0'  => '$1',
-'htmlopen1'  => "~'<table cellspacing=\"0\" cellpadding=\"1\" border=\"'.abbcq('$1').'\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</table>'",
+'html1'      => function ($m) { return '<table cellspacing="0" cellpadding="1" border="' . abbcq($m[1]) . '">' . abbcs($m[2]) . '</table>'; },
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 0,
@@ -614,13 +591,9 @@ $ABBC['Tags'] = array(
 'htmlcont0'  => '$1',
 'htmlclose0' => '</td>',
 'textcont0'  => '$1  ',
-'htmlopen1'  => "~'<td colspan=\"'.abbcq('$1').'\" style=\"padding-right:8px;\">'.",
-'htmlcont1'  => "abbcs('$2').",
-'htmlclose1' => "'</td>'",
+'html1'      => function ($m) { return '<td colspan="' . abbcq($m[1]) . '" style="padding-right:8px;">' . abbcs($m[2]) . '</td>'; },
 'textcont1'  => '$2 | ',
-'htmlopen2'  => "~'<td colspan=\"'.abbcq('$1').'\" rowspan=\"'.abbcq('$1').'\" style=\"padding-right:8px;\">'.",
-'htmlcont2'  => "abbcs('$2').",
-'htmlclose2' => "'</td>'",
+'html2'      => function ($m) { return '<td colspan="' . abbcq($m[1]) . '" rowspan="' . abbcq($m[2]) . '" style="padding-right:8px;">' . abbcs($m[3]) . '</td>'; },
 'textcont2'  => '$2 | ',
 'htmlblock'  => true,
 'minparam'   => 0,
