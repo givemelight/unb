@@ -980,39 +980,15 @@ function AbbcSyntaxHighlight($text, $incode = false)
 
 		$geshi = new GeSHi(AbbcH2T($text), $lang);
 		$geshi->set_header_type(GESHI_HEADER_DIV);
-		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
-		$geshi->set_line_style('', '');
-		$geshi->set_line_class('cont even', 'cont odd');
-		#$geshi->start_line_numbers_at(1);
-		#$geshi->enable_classes();
-		#$geshi->get_stylesheet(false);
-		$geshi->set_tab_width(4);
-		$geshi->set_link_styles(GESHI_LINK, 'border-bottom: dotted 1px blue;');
-		$geshi->set_link_styles(GESHI_HOVER, '');
-		$geshi->set_link_styles(GESHI_ACTIVE, '');
-		$geshi->set_link_styles(GESHI_VISITED, 'border-bottom: dotted 1px blue;');
-
-		$geshi->set_overall_class('');
-		$geshi->set_overall_style('');
-		$geshi->set_code_style('');
-		$geshi->set_keyword_group_style(1, 'color: blue;');
-		$geshi->set_keyword_group_style(2, 'color: blue;');
-		$geshi->set_keyword_group_style(3, 'color: darkblue;');
-		$geshi->set_keyword_group_style(4, 'color: blue;');
-		$geshi->set_comments_style(1, 'color: gray;');
-		$geshi->set_comments_style(2, 'color: gray;');
-		$geshi->set_comments_style('MULTI', 'color: gray;');
-		$geshi->set_escape_characters_style('color: #800080;');
-		$geshi->set_symbols_style('color: red;');
-		$geshi->set_strings_style('color: darkcyan;');
-		$geshi->set_numbers_style('color: darkcyan;');
-		$geshi->set_methods_style(1, 'color: black;');
-		$geshi->set_methods_style(2, 'color: black;');
+        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);        
+		$geshi->enable_classes();		
+		$geshi->set_tab_width(4);       
+        
 		if (in_array($lang, array('perl', 'php')))
 			$geshi->set_regexps_style(0, 'color: black;');   // make $-variables black
 
 		// TODO: this should really be handled by the GeSHi library
-		if ($geshi->error != GESHI_ERROR_NO_SUCH_LANG)
+		if ($geshi->error() != GESHI_ERROR_NO_SUCH_LANG)
 		{
 			$text = $geshi->parse_code();
 			$text = str_replace("\n", "\r", $text);

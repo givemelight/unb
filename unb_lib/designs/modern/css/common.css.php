@@ -24,6 +24,7 @@ require(dirname(dirname(__FILE__)) . '/cssconfig.php');
 @import url("thread.css.php");
 @import url("userlist.css.php");
 @import url("userprofile.css.php");
+@import url("geshi.css.php");
 
 
 /* -------------------- GENERAL -------------------- */
