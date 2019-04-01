@@ -980,9 +980,9 @@ function AbbcSyntaxHighlight($text, $incode = false)
 
 		$geshi = new GeSHi(AbbcH2T($text), $lang);
 		$geshi->set_header_type(GESHI_HEADER_DIV);
-        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);        
-		$geshi->enable_classes();		
-		$geshi->set_tab_width(4);       
+		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+		$geshi->enable_classes();
+		$geshi->set_tab_width(4);
         
 		if (in_array($lang, array('perl', 'php')))
 			$geshi->set_regexps_style(0, 'color: black;');   // make $-variables black
