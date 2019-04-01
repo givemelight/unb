@@ -123,9 +123,9 @@ $ABBC['Tags'] = array(
 
 // TODO: add optional second parameter (numeric, to distinguish them...) to define a starting line number
 'code' => array(
-'html0'		 => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[1]))) . '</div>'; },
+'html0'		 => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(rtrim($m[1])) . '</div>'; },
 'textcont0'  => '$1',
-'html1'      => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(abbcs(rtrim($m[2])), $m[1]) . '</div>'; },
+'html1'      => function ($m) { return '<div class="code">' . AbbcSyntaxHighlight(rtrim($m[2]), $m[1]) . '</div>'; },
 'textcont1'  => '$2',
 'htmlblock'  => true,
 'minparam'   => 0,
