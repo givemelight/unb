@@ -387,28 +387,6 @@ img.smilie
 	margin-right: 3px;
 	text-align: right;
 }
-.abbc .code .cont   /* content */
-{
-	font-family: Andale Mono, monospace;
-}
-.abbc .code .cont.even
-{
-<?php if ($ie && !$_ie7) { ?>
-	background: #EEEEEE;
-<?php } else { ?>
-	background: url(<?php echo $ImgPath ?>shade_bk2.png);
-<?php } ?>
-}
-.abbc .code .cont.odd
-{
-}
-
-.abbc .code ol.nolinenos   /* hide line numbers - does not work this way */
-{
-	list-style-type: none;
-	padding-left: 0;
-}
-
 
 /* -------------------- reply container -------------------- */
 

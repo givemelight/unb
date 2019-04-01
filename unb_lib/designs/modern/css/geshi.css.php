@@ -8,68 +8,39 @@
 //
 // CSS file:    geshi.css.php
 // Author:      Alexander Gnauck
-// Last edit:   20190331
+// Last edit:   20190401
 
 require(dirname(dirname(__FILE__)) . '/cssconfig.php');
 ?>
 
-div.code {
-  overflow-x: auto;
-  background: white;
-  border: 1px solid darkgray;
-}
-
-.li1, .li2
+.abbc .code .li1
 {
-	font-family: Andale Mono,Courier New,monospace;
-  font-size: 12px;
-  line-height: 100%;
+<?php if ($ie && !$_ie7) { ?>
+	background: #EEEEEE;
+<?php } else { ?>
+	background: url(<?php echo $ImgPath ?>shade_bk2.png);
+<?php } ?>
 }
 
-div.code ol {
-  list-style: none;  
-  padding: 10px; 
+.abbc .code a:link, .abbc .code a:visited
+{
+  border-bottom: dotted 1px blue;
 }
 
-li.li1, li.li2 {
-  counter-increment: item;
-  margin-bottom: 5px;
-  white-space:nowrap;   
-}
- 
-li.li1 div, li.li2 div {
-  display: inline-block;   
-}
- 
-li.li1:before, li.li2:before {
-  width: 20px;
-  margin-right: 10px;
-  content: counter(item);  
-  color: darkgray;
-  text-align: right;
-  display: inline-block;
+.abbc .code .li1, .abbc .code .li2
+{
+	font-family: 'Andale Mono', 'Courier New', monospace;
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 
- /*li.li2 { font-style: italic;}*/
- 
-.kw1 {color: blue; }
-.kw2 {color: blue; }
-.kw3 {color: darkblue;}
-.kw4 {color: blue;}
+.abbc .code .kw1, .abbc .code .kw2, .abbc .code .kw4 { color: blue; }
+.abbc .code .kw3 { color: darkblue; }
 
-.co0 {color: #808080; font-style: italic;}
-.co1 {color: #808080; font-style: italic;}
-.co2 {color: #808080; font-style: italic;}
-.coMULTI {color: #808080; font-style: italic;}
+.abbc .code .co0, .abbc .code .co1, .abbc .code .co2, .abbc .code .coMULTI { color: gray; }
 
-.es0 {color: #EEBE5B; }
-.br0  {color: black;}
-.sy0 {color: #E06645;}
-.st0 {color: #47B340;}
-.nu0 {color: #cc66cc;}
+.abbc .code .es0 { color: #800080; }
+.abbc .code .br0 { color: red; }
+.abbc .code .st0, .abbc .code .st_h, .abbc .code .nu0 { color: darkcyan; }
 
-.me1 {color: black;}
-.me2 {color: black;} 
-
-.re0 {color: #8594A8;}
-.re1 {color: #0085CD;}
+.abbc .code .re0, .abbc .code .re1, .abbc .code .sy0, .abbc .code .me1, .abbc .code .me2 { color: black; }
