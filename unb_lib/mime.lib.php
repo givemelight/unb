@@ -33,20 +33,20 @@ function my_quoted_printable_encode($str, $level = 1, $splitlines = true)
 	// encode characters according to selected level
 	switch ($level)
 	{
-		case 3:
-			$str = preg_replace("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $str);
+		case 3:			
+			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 			$str = preg_replace("~[\x20]~", "_", $str);
 			break;
-		case 2:
-			$str = preg_replace("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x24\x3C-\x40\x5B-\x60\x7B-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $str);
+		case 2:			
+			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x24\x3C-\x40\x5B-\x60\x7B-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 			$str = preg_replace("~[\x20]~", "_", $str);
 			break;
-		default:
-			$str = preg_replace("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $str);
+		default:			
+			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x3D\x7F-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 	}
 
 	// encode blanks and tabs at the end of lines
-	$str = preg_replace("~([\x09\x20])\n~e", "sprintf('=%02X\n', ord('\\1'))", $str);
+	$str = preg_replace_callback("~([\x09\x20])\n~", function($matches) { return sprintf('=%02X\n', ord($matches[1])); }, $str);
 
 	$parts = explode("\n", $str);
 
