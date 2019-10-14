@@ -33,15 +33,15 @@ function my_quoted_printable_encode($str, $level = 1, $splitlines = true)
 	// encode characters according to selected level
 	switch ($level)
 	{
-		case 3:			
+		case 3:
 			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 			$str = preg_replace("~[\x20]~", "_", $str);
 			break;
-		case 2:			
+		case 2:
 			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x21-\x24\x3C-\x40\x5B-\x60\x7B-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 			$str = preg_replace("~[\x20]~", "_", $str);
 			break;
-		default:			
+		default:
 			$str = preg_replace_callback("~([\x01-\x08\x0B-\x0C\x0E-\x1F\x3D\x7F-\xFF])~", function($matches) { return sprintf('=%02X', ord($matches[1])); }, $str);
 	}
 
