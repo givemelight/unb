@@ -53,6 +53,8 @@ $UNB_T['cp.db prefix~'] = 'Diese Zeichenfolge wird den Standard-Tabellennamen vo
 
 $UNB_T['cp.smtp settings'] = 'SMTP-Einstellungen';
 $UNB_T['cp.smtp server'] = 'Mailserver';
+$UNB_T['cp.smtp port'] = 'Mailserver Port';
+$UNB_T['cp.smtp tls'] = 'Verbindung über TLS verschlüsseln';
 $UNB_T['cp.smtp sender'] = 'E-Mail-Adresse';
 $UNB_T['cp.smtp user'] = 'Benutzername für SMTP AUTH';
 $UNB_T['cp.smtp pass'] = 'Kennwort für SMTP AUTH';
