@@ -86,6 +86,18 @@
 	<td class="leftcol">{tr "cp.smtp server"}:</td>
 	<td><div class="outerTextfield100pc"><input type="text" name="SmtpServer" value="{$controlpanelSmtpServer}" size="40" maxlength="100" /></div></td>
 </tr>
+<tr id="smtp_port">
+	<td class="leftcol">{tr "cp.smtp port"}:</td>
+	<td><div class="outerTextfield100pc"><input type="text" name="SmtpPort" value="{$controlpanelSmtpPort}" size="40" maxlength="100" /></div></td>
+</tr>
+<tr id="smtp_tls">
+	<td colspan="2">
+		<div class="box">
+			<input type="hidden" name="UseSmtpTls" value="1" />
+			<label><input type="checkbox" name="SmtpTls" value="1" {form_checked_if $controlpanelSmtpTls} />{tr "cp.smtp tls"}</label>
+		</div>
+	</td>
+</tr>
 <tr>
 	<td class="leftcol">{tr "cp.smtp sender"}:</td>
 	<td><div class="outerTextfield100pc"><input type="text" name="SmtpSender" value="{$controlpanelSmtpSender}" size="40" maxlength="100" /></div></td>
@@ -103,12 +115,12 @@
 
 <div class="box">
 <input type="hidden" name="SetUsePHPMail" value="1" />
-<label><input type="checkbox" name="UsePHPMail" value="1" {form_checked_if $controlpanelUsePHPMail} onclick="toggleVisId('smtp_server', !this.checked); toggleVisId('smtp_user', !this.checked); toggleVisId('smtp_pass', !this.checked)" />{tr "cp.use php mail"}</label>
+<label><input type="checkbox" name="UsePHPMail" value="1" {form_checked_if $controlpanelUsePHPMail} onclick="toggleVisId('smtp_server', !this.checked); toggleVisId('smtp_port', !this.checked); toggleVisId('smtp_tls', !this.checked); toggleVisId('smtp_user', !this.checked); toggleVisId('smtp_pass', !this.checked)" />{tr "cp.use php mail"}</label>
 </div>
 <div class="box small indent">
 {tr "cp.use php mail~"}
 </div>
-{if $controlpanelUsePHPMail}{html_hide_id "smtp_server"}{html_hide_id "smtp_user"}{html_hide_id "smtp_pass"}{endif}
+{if $controlpanelUsePHPMail}{html_hide_id "smtp_server"}{html_hide_id "smtp_port"}{html_hide_id "smtp_tls"}{html_hide_id "smtp_user"}{html_hide_id "smtp_pass"}{endif}
 </div><!-- option -->
 </div><!-- page_content -->
 

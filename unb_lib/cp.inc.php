@@ -1151,6 +1151,10 @@ if ($_POST['action'] == 'edit' &&
 		$UNB['ConfigFile']['db_prefix'] = $_POST['DbPrefix'];
 	if (isset($_POST['SmtpServer']))
 		$UNB['ConfigFile']['smtp_server'] = $_POST['SmtpServer'];
+	if (isset($_POST['SmtpPort']))
+		$UNB['ConfigFile']['smtp_port'] = $_POST['SmtpPort'];
+	if (isset($_POST['SmtpTls']))
+		$UNB['ConfigFile']['smtp_tls'] = $_POST['SmtpTls'] ? 1 : 0;
 	if (isset($_POST['SmtpSender']))
 		$UNB['ConfigFile']['smtp_sender'] = $_POST['SmtpSender'];
 	if (isset($_POST['SmtpUser']))
@@ -2705,6 +2709,8 @@ function CPForm($userid, $cat = 1)
 		$TP['controlpanelDbPrefix'] = $p ? t2i($_POST['DbPrefix']) : t2i(rc('db_prefix'));
 
 		$TP['controlpanelSmtpServer'] = $p ? t2i($_POST['SmtpServer']) : t2i(rc('smtp_server'));
+		$TP['controlpanelSmtpPort'] = $p ? t2i($_POST['SmtpPort']) : t2i(rc('smtp_port'));
+		$TP['controlpanelSmtpTls'] = $p ? $_POST['SmtpTls'] : rc('smtp_tls');
 		$TP['controlpanelSmtpSender'] = $p ? t2i($_POST['SmtpSender']) : t2i(rc('smtp_sender'));
 		$TP['controlpanelSmtpUser'] = $p ? t2i($_POST['SmtpUser']) : t2i(rc('smtp_user'));
 		$TP['controlpanelSmtpPass'] = $p ? t2i($_POST['SmtpPass']) : (rc('smtp_pass') ? '          ' : '');   // don't give away the actual password

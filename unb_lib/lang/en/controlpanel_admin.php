@@ -45,6 +45,8 @@ $UNB_T['cp.db prefix~'] = 'This key is added to the standard table names. Use di
 
 $UNB_T['cp.smtp settings'] = 'SMTP settings';
 $UNB_T['cp.smtp server'] = 'Mail server';
+$UNB_T['cp.smtp port'] = 'Mail server port';
+$UNB_T['cp.smtp tls'] = 'Use secure connection over TLS';
 $UNB_T['cp.smtp sender'] = 'E-mail address';
 $UNB_T['cp.smtp user'] = 'SMTP AUTH username';
 $UNB_T['cp.smtp pass'] = 'SMTP AUTH password';

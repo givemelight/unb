@@ -10,9 +10,10 @@
 if (!defined('UNB_RUNNING')) die('Not a UNB environment in ' . basename(__FILE__));
 
 require_once(dirname(__FILE__) . '/user.lib.php');
-require_once(dirname(__FILE__) . '/mime-create.lib.php');
-require_once(dirname(__FILE__) . '/smtp.lib.php');
 require_once(dirname(__FILE__) . '/jabber3.lib.php');
+require_once(dirname(__FILE__) . '/phpmailer/Exception.php');
+require_once(dirname(__FILE__) . '/phpmailer/PHPMailer.php');
+require_once(dirname(__FILE__) . '/phpmailer/SMTP.php');
 
 // Send out a validation e-mail to the user
 //
@@ -89,98 +90,83 @@ function UnbNotifyUser($users, $method, $subject_key, $subject_data, $msg_key, $
 
 	if ($method == UNB_NOTIFY_EMAIL)
 	{
-		// prepare data for E-Mail transport
-		$mime = new mime_create_class;
-		$mime->set_from(rc('smtp_sender'), rc('forum_title'), $UNB['CharSet']);
-		if ($from != '') $mime->set_reply($from);
-		$mime->set_header('Precedence', 'bulk');
-
 		$mail_error = '';
+		$mail = new PHPMailer\PHPMailer\PHPMailer(true);
+		$mail->CharSet = $UNB['CharSet'];
 		if (!rc('use_php_mail'))
 		{
-			$smtp = new smtp_class;
 			$pass = rc('smtp_pass');
 			if (!strncmp($pass, 'b64:', 4)) $pass = base64_decode(substr($pass, 4));
-			if (!$smtp->connect(rc('smtp_server'), rc('smtp_user'), $pass))
+
+			$mail->isSMTP();
+			$mail->Host       = rc('smtp_server');
+			$mail->Port       = rc('smtp_port');
+			$mail->Username   = rc('smtp_user');
+			$mail->Password   = $pass;
+			if (rc('smtp_user') !== '')
 			{
-				$mail_error = $smtp->error;
-			}
+				$mail->SMTPAuth = true;
+			}			
+			$mail->SMTPKeepAlive = true; // SMTP connection will not close after each email sent, reduces SMTP overhead
+			if (rc('smtp_tls'))
+			{
+				$mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+			}    		
 		}
 
-		if (!$mail_error)
+		$mail->setFrom(rc('smtp_sender'), rc('forum_title'));		
+
+		foreach ($users as $userid)
 		{
-			foreach ($users as $userid)
+			//if ($userid == $UNB['LoginUserID']) continue;   // don't send a notification to the poster itself
+			// this is now handled by the calling function
+			if (!$user->Load($userid)) continue;
+			$mailAddress = $toUnconfirmedAddress ? $user->GetEMail() : $user->GetValidatedEMail();
+			if ($mailAddress == '') continue;
+
+			$lang = $user->GetLanguage();
+			if ($lang == '') $lang = $UNB['DefaultLang'];
+			elseif (!in_array($lang, $UNB['AllLangs'])) $lang = $UNB['Lang'];
+			UnbRequireTxt('mail', $lang);			
+			
+			$subject = $UNB_T[$subject_key];
+			foreach ($subject_data as $varname => $value) $subject = str_replace($varname, $value, $subject);
+			$mail->Subject = $subject;
+
+			$message = $UNB_T[$msg_key];
+			foreach ($msg_data as $varname => $value) $message = str_replace($varname, $value, $message);
+			$message2 = str_replace("{rcpt-name}", $user->GetName(), $message);
+			
+			$mail->isHTML(false);
+			$mail->Body = $message2;
+		
+			try 
 			{
-				//if ($userid == $UNB['LoginUserID']) continue;   // don't send a notification to the poster itself
-				// this is now handled by the calling function
-				if (!$user->Load($userid)) continue;
-				$mailAddress = $toUnconfirmedAddress ? $user->GetEMail() : $user->GetValidatedEMail();
-				if ($mailAddress == '') continue;
-
-				$lang = $user->GetLanguage();
-				if ($lang == '') $lang = $UNB['DefaultLang'];
-				elseif (!in_array($lang, $UNB['AllLangs'])) $lang = $UNB['Lang'];
-				UnbRequireTxt('mail', $lang);
-
-				if (!rc('use_php_mail'))
-				{
-					$subject = $UNB_T[$subject_key];
-					foreach ($subject_data as $varname => $value) $subject = str_replace($varname, $value, $subject);
-					$mime->set_subject($subject, $UNB['CharSet']);
-
-					$message = $UNB_T[$msg_key];
-					foreach ($msg_data as $varname => $value) $message = str_replace($varname, $value, $message);
-					$message2 = str_replace("{rcpt-name}", $user->GetName(), $message);
-					$mime->set_msg_text($message2, $UNB['CharSet']);
-					$mime->build_msg();
-
-					$mime->reset_rcpts();
-					$mime->add_to($mailAddress, $user->GetName());
-					$mime->build();
-
-					$smtp->reset_data();
-					if (!$smtp->set_from(rc('smtp_sender'))) continue;
-					if (!$smtp->add_to($mailAddress)) continue;
-					if (!$smtp->sendmail($mime->body))
-					{
-						$mail_error .= $smtp->error . '<br />';
-						continue;
-					}
-				}
-				else
-				{
-					$subject = $UNB_T[$subject_key];
-					foreach ($subject_data as $varname => $value) $subject = str_replace($varname, $value, $subject);
-					$subject = MimeEncodeWord($subject, false, false, $UNB['CharSet']);
-
-					$message = $UNB_T[$msg_key];
-					foreach ($msg_data as $varname => $value) $message = str_replace($varname, $value, $message);
-					$message2 = str_replace("{rcpt-name}", $user->GetName(), $message);
-
-					$headers = 'Content-Type: text/plain; charset="' . $UNB['CharSet'] . '"';
-					if (rc('smtp_sender'))
-						$headers .= PHP_EOL . 'From: "' . rc('forum_title') . '" <' . rc('smtp_sender') . '>';
-					if ($from != '')
-						$headers .= PHP_EOL . 'Reply-to: ' . $from;
-					$headers .= PHP_EOL . "Precedence: bulk";
-
-					if (!mail(
-						/*to*/ $mailAddress,
-						/*subject*/ $subject,
-						/*message*/ $message2,
-						/*headers*/ $headers))
-					{
-						$mail_error .= 'mail() for ' . $mailAddress . 'failed.<br />';
-						continue;
-					}
-				}
-				$successful[] = $userid;
+				$mail->addAddress($mailAddress, $user->GetName()); 
 			}
-		}
+			catch (Exception $e) 
+			{
+				$mail_error .= 'Invalid address skipped: ' . $mailAddress . '<br />';
+				continue;
+			}
 
-		if ($mail_error) UnbErrorLog('SMTP error: ' . $mail_error);
+			try
+			{
+				$mail->send();
+			}				
+			catch (Exception $e) 
+			{
+				$mail_error .= $mail->ErrorInfo . '<br />';
+				$mail->smtp->reset();
+			}
+		
+			//Clear all addresses for the next iteration
+			$mail->clearAddresses();			
+			
+			$successful[] = $userid;
+		}	
 
-		if (!rc('use_php_mail')) $smtp->end();
+		if ($mail_error) UnbErrorLog('SMTP error: ' . $mail_error);		
 	}
 
 	if ($method == UNB_NOTIFY_JABBER)
